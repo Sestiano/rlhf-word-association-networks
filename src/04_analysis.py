@@ -1,5 +1,5 @@
 # 04_analysis.py - Statistical Analysis and Plots
-# Genera: network_comparison.png, plutchik_comparison.png, metrics_comparison.png
+# Generates: network_comparison.png, plutchik_comparison.png, metrics_comparison.png
 import pickle, json
 import numpy as np
 import pandas as pd
@@ -37,7 +37,7 @@ def get_valence(word, es):
         return 'neutral'
 
 def analyze_emotions(G, top_n=100):
-    """Plutchik scores per top-N nodi"""
+    """Plutchik scores for top-N nodes"""
     es = EmoScores()
     top_nodes = sorted(G.nodes(), key=lambda x: G.degree(x), reverse=True)[:top_n]
     counts = {e: 0 for e in PLUTCHIK_COLORS}
@@ -107,7 +107,7 @@ def plot_network_comparison(networks, output="results/network_comparison.png"):
 # --- Plot: plutchik_comparison.png ---
 
 def plot_plutchik_comparison(networks, output="results/plutchik_comparison.png"):
-    """Radar/flower chart emozioni Plutchik per modello"""
+    """Radar/flower chart of Plutchik emotions per model"""
     emo_base = analyze_emotions(networks['base'])
     emo_chat = analyze_emotions(networks['chat'])
 
@@ -142,7 +142,7 @@ def plot_plutchik_comparison(networks, output="results/plutchik_comparison.png")
 # --- Plot: metrics_comparison.png ---
 
 def plot_metrics_comparison(df, assoc, output="results/metrics_comparison.png"):
-    """Bar chart: degree, closeness, S/D ratio per valenza e modello"""
+    """Bar chart: degree, closeness, S/D ratio by valence and model"""
     valences = ['positive', 'neutral', 'negative']
 
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
@@ -196,7 +196,7 @@ def plot_metrics_comparison(df, assoc, output="results/metrics_comparison.png"):
 # --- Plot: network_visual.png (appendix) ---
 
 def plot_network_visual(networks, output="results/network_visual.png"):
-    """Full network topology — community layout + inter-community bridges in red."""
+    """Full network topology — community layout with inter-community bridges in red."""
     from networkx.algorithms.community import greedy_modularity_communities
 
     fig, axes = plt.subplots(1, 2, figsize=(30, 15))
@@ -294,7 +294,7 @@ if __name__ == "__main__":
         networks = pickle.load(f)
     df = pd.read_csv("results/metrics.csv")
 
-    # 1. Statistica (degree)
+    # 1. Statistics (degree)
     print("\n1. DEGREE COMPARISON")
     for valence in ['positive', 'negative', 'neutral']:
         base = df[(df['model']=='base') & (df['valence']==valence)]['degree'].values
@@ -303,7 +303,7 @@ if __name__ == "__main__":
         d = cohens_d(base, chat)
         print(f"  {valence.upper()}: Base={np.mean(base):.1f}, Chat={np.mean(chat):.1f}, p={p:.4f}, d={d:.2f}")
 
-    # 2. Strength e concentrazione
+    # 2. Strength & concentration
     print("\n2. STRENGTH & CONCENTRATION")
     for valence in ['positive', 'negative', 'neutral']:
         for model in ['base', 'chat']:
@@ -314,14 +314,14 @@ if __name__ == "__main__":
             print(f"  {model.upper()} {valence}: strength={s:.1f}, degree={deg:.1f}, "
                   f"strength/degree={ratio:.2f}")
 
-    # 3. Emozioni
+    # 3. Emotions
     print("\n3. EMOTIONAL ANALYSIS")
     for model, G in networks.items():
         emo = analyze_emotions(G)
         print(f"  {model.upper()}: joy={emo['joy']:.0f}, trust={emo['trust']:.0f}, "
               f"fear={emo['fear']:.0f}, anger={emo['anger']:.0f}")
 
-    # 4. Grafici
+    # 4. Plots
     print("\n4. PLOTS")
     with open("data/associations.json") as f:
         assoc = json.load(f)

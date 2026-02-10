@@ -3,7 +3,7 @@ import json, pickle
 import networkx as nx
 
 def build_association_network(data):
-    """Costruisce grafo cue -> associations"""
+    """Build graph from cue -> associations"""
     G = nx.Graph()
     for key, samples in data.items():
         for sample in samples:
@@ -24,8 +24,8 @@ if __name__ == "__main__":
     for model in ["base", "chat"]:
         G = build_association_network(data[model])
         networks[model] = G
-        print(f"{model}: nodi={G.number_of_nodes()} archi={G.number_of_edges()}")
+        print(f"{model}: nodes={G.number_of_nodes()} edges={G.number_of_edges()}")
     
     with open("results/networks.pkl", "wb") as f:
         pickle.dump(networks, f)
-    print("Salvato results/networks.pkl")
+    print("Saved results/networks.pkl")

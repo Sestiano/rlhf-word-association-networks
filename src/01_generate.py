@@ -4,7 +4,7 @@ from spacy.lang.en.stop_words import STOP_WORDS as STOPWORDS
 from config import *
 
 def generate_base(cue, retries=5, seed=None):
-    """Completion API per base model (few-shot)"""
+    """Completion API for base model (few-shot)"""
     prompt = PROMPT_BASE.format(cue=cue)
     for attempt in range(retries):
         try:
@@ -26,7 +26,7 @@ def generate_base(cue, retries=5, seed=None):
     raise RuntimeError(f"Base API failed after {retries} retries")
 
 def generate_chat(cue, retries=5, seed=None):
-    """Chat API per chat model (system + user)"""
+    """Chat API for chat model (system + user)"""
     messages = [
         {"role": "system", "content": SYSTEM_MSG},
         {"role": "user", "content": USER_MSG.format(cue=cue)}
@@ -50,15 +50,15 @@ def generate_chat(cue, retries=5, seed=None):
     raise RuntimeError(f"Chat API failed after {retries} retries")
 
 def parse_words(text):
-    """Estrae parole, filtra stopwords/duplicati/cue"""
-    # gestisce sia 'word, word' che 'word\nword' che '1. word'
-    text = re.sub(r'\d+\.\s*', ', ', text)  # rimuovi numerazione
+    """Extract words, filter stopwords/duplicates/cue"""
+    # handles 'word, word', 'word\nword', and '1. word' formats
+    text = re.sub(r'\d+\.\s*', ', ', text)  # remove numbering
     words = re.split(r'[,\n]+', text)
     seen = set()
     result = []
     for w in words:
         w = w.strip().lower()
-        # tieni solo parole singole alfabetiche
+        # keep only single alphabetic words
         if w and w.isalpha() and len(w) >= 2 and w not in STOPWORDS and w not in seen:
             seen.add(w)
             result.append(w)
@@ -67,7 +67,7 @@ def parse_words(text):
     return result
 
 if __name__ == "__main__":
-    # --test: 1 sample, 2 cue per valenza (6 chiamate, ~15 sec)
+    # --test: 1 sample, 2 cues per valence (6 calls, ~15 sec)
     test_mode = '--test' in sys.argv
     n_samples = 1 if test_mode else N_SAMPLES
     if test_mode:
@@ -76,17 +76,17 @@ if __name__ == "__main__":
     else:
         cues = CUES
 
-    # Resume: carica risultati parziali
+    # Resume: load partial results
     import os
     path = "data/associations.json"
     if os.path.exists(path):
         with open(path) as f:
             results = json.load(f)
-        print("Ripresa da risultati parziali")
+        print("Resuming from partial results")
     else:
         results = {"base": {}, "chat": {}}
 
-    call_idx = 0  # contatore globale per seed incrementale
+    call_idx = 0  # global counter for incremental seed
 
     for valence, words in cues.items():
         for cue in words:
@@ -116,4 +116,4 @@ if __name__ == "__main__":
             with open(path, "w") as f:
                 json.dump(results, f, indent=2)
 
-    print(f"Salvato {path}")
+    print(f"Saved {path}")

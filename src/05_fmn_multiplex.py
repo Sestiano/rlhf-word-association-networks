@@ -1,5 +1,5 @@
 # 05_fmn_multiplex.py - FMN Ego-Networks
-# Genera: fmn_ego_neutral.png, fmn_ego_valenced.png
+# Generates: fmn_ego_neutral.png, fmn_ego_valenced.png
 import os, pickle
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,7 +17,7 @@ except ImportError:
 
 from emoatlas import EmoScores
 
-# --- Palette (EmoAtlas-conforme) ---
+# --- Palette (EmoAtlas-compliant) ---
 
 COLZ = {
     'positive':     (26/256, 133/256, 255/256),
@@ -36,7 +36,7 @@ NEGATIVE_EMOTIONS = {'anger', 'fear', 'sadness', 'disgust'}
 _es_cache = {}
 
 def get_word_valence(word):
-    """Valenza emotiva (cached)"""
+    """Emotional valence (cached)"""
     if word in _es_cache:
         return _es_cache[word]
     try:
@@ -56,7 +56,7 @@ def _node_color(word):
     return COLZ.get(v, COLZ['neutral'])
 
 def _edge_color_and_width(w1, w2, base_lw=1.0):
-    """Colore e spessore arco secondo convenzioni FMN"""
+    """Edge color and width according to FMN conventions"""
     v1, v2 = get_word_valence(w1), get_word_valence(w2)
 
     if v1 == 'positive' and v2 == 'positive':
@@ -79,7 +79,7 @@ def _bezier_curve(p0, p1, control, n_points=30):
     return curve
 
 def _get_community_positions(G, radius=1.0):
-    """Layout circolare raggruppato per comunita (Louvain)"""
+    """Circular layout grouped by community (Louvain)"""
     if community_louvain is not None and len(G.nodes()) > 2:
         try:
             partition = community_louvain.best_partition(G)
@@ -126,9 +126,9 @@ def _get_community_positions(G, radius=1.0):
 # --- FMN Ego-Network ---
 
 def plot_ego_fmn(G, center_word, ax, depth=1):
-    """FMN ego-network: layout circolare, edge bundling, valenza"""
+    """FMN ego-network: circular layout, edge bundling, valence"""
     if center_word not in G:
-        ax.text(0.5, 0.5, f"'{center_word}' non presente\nnella rete",
+        ax.text(0.5, 0.5, f"'{center_word}' not found\nin the network",
                 ha='center', va='center', fontsize=11, transform=ax.transAxes,
                 style='italic', color='gray')
         ax.set_title(f"'{center_word}'", fontsize=12, fontweight='bold')
@@ -149,7 +149,7 @@ def plot_ego_fmn(G, center_word, ax, depth=1):
     max_w = max(weights) if weights else 1
     base_lw = 15 / (len(ego.nodes()) ** 0.6)
 
-    # ---- Disegna archi con Bezier curves ----
+    # ---- Draw edges with Bezier curves ----
     edges_bg = []
     edges_fg = []
 
@@ -181,7 +181,7 @@ def plot_ego_fmn(G, center_word, ax, depth=1):
     for cx, cy, color, lw, zo in edges_fg:
         ax.plot(cx, cy, color=color, linewidth=lw, alpha=0.6, zorder=1, solid_capstyle='round')
 
-    # ---- Disegna label dei nodi ----
+    # ---- Draw node labels ----
     N = len(ego.nodes())
     for node in ego.nodes():
         x, y = pos[node]
@@ -221,7 +221,7 @@ def plot_ego_fmn(G, center_word, ax, depth=1):
     aura = 'positive' if n_pos > n_neg else ('negative' if n_neg > n_pos else 'neutral')
     aura_color = COLZ.get(aura, (0.5, 0.5, 0.5))
 
-    ax.set_title(f"'{center_word}'\n({ego.number_of_nodes()} nodi, aura: {aura})",
+    ax.set_title(f"'{center_word}'\n({ego.number_of_nodes()} nodes, aura: {aura})",
                  fontsize=11, fontweight='bold', color=aura_color)
     ax.set_xlim(-1.5, 1.5)
     ax.set_ylim(-1.5, 1.5)
@@ -230,7 +230,7 @@ def plot_ego_fmn(G, center_word, ax, depth=1):
 
 
 def _ego_figure(networks, words, title, output_path):
-    """Helper: genera una figura ego-network 2×N (BASE sopra, CHAT sotto)."""
+    """Helper: generate a 2×N ego-network figure (BASE top, CHAT bottom)."""
     n_words = len(words)
     fig, axes = plt.subplots(2, n_words, figsize=(7 * n_words, 14), facecolor='white')
     if n_words == 1:

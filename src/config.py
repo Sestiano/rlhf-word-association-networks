@@ -1,4 +1,4 @@
-# config.py - Word Association Task (Woseco)
+# config.py - Word Association Task Configuration
 LM_STUDIO_BASE = "http://172.20.10.4:1234/v1/completions"
 LM_STUDIO_CHAT = "http://172.20.10.4:1234/v1/chat/completions"
 MODEL_BASE = "thebloke/llama-2-7b-gguf"
@@ -9,18 +9,18 @@ STOP = ["\n\n", "\n1", "\nList"]
 SEED = 42
 N_SAMPLES = 50
 
-# Few-shot per base model (completion)
+# Few-shot prompt for base model (completion)
 PROMPT_BASE = """List 10 words associated with 'dog': bone, bark, tail, leash, puppy, fetch, collar, paw, fur, walk
 List 10 words associated with 'ocean': wave, salt, fish, tide, shore, deep, coral, whale, sand, swim
 List 10 words associated with '{cue}':"""
 
-# System + user per chat model
+# System + user messages for chat model
 SYSTEM_MSG = "You are a word association assistant. When given a word, respond ONLY with exactly 10 associated words separated by commas. No explanations, no numbering."
 USER_MSG = "List 10 words associated with '{cue}':"
 
 # Cue words: 10 positive, 10 negative, 10 neutral
-# Concrete/semi-concrete, nessuna emozione Plutchik diretta
-# Valenza verificata con EmoAtlas zscores
+# Concrete/semi-concrete, no direct Plutchik emotions
+# Valence verified with EmoAtlas z-scores
 # Ref: ANEW (Bradley & Lang 1999), Brysbaert et al. 2014
 CUES = {
     "positive": ["treasure", "medal", "bloom", "embrace", "gift",
@@ -31,7 +31,7 @@ CUES = {
                 "thread", "anchor", "lantern", "bucket", "rope"]
 }
 
-# Prompt completion-style (usato solo come fallback)
+# Completion-style prompt (used only as fallback)
 PROMPT_TEMPLATE = USER_MSG
 
 NEGATIVE_EMOTIONS = {'fear', 'anger', 'sadness', 'disgust'}

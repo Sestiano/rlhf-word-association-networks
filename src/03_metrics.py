@@ -5,7 +5,7 @@ import networkx as nx
 from config import CUES
 
 def get_cue_metrics(G, cue, closeness_dict):
-    """Metriche per singolo cue word"""
+    """Metrics for a single cue word"""
     if cue not in G:
         return {"degree": 0, "strength": 0, "clustering": 0, "closeness": 0}
     return {
@@ -16,7 +16,7 @@ def get_cue_metrics(G, cue, closeness_dict):
     }
 
 def global_metrics(G):
-    """Metriche globali della rete"""
+    """Global network metrics"""
     gcc = max(nx.connected_components(G), key=len)
     Gc = G.subgraph(gcc)
     return {
@@ -30,7 +30,7 @@ def global_metrics(G):
     }
 
 def type_token_ratio(data):
-    """TTR: parole uniche / parole totali nelle associazioni"""
+    """TTR: unique words / total words in associations"""
     all_words = []
     for samples in data.values():
         for s in samples:
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     with open("data/associations.json") as f:
         assoc = json.load(f)
 
-    # Metriche globali
+    # Global metrics
     print("\nGLOBAL METRICS")
     print("-" * 50)
     for model, G in networks.items():
@@ -55,7 +55,7 @@ if __name__ == "__main__":
               f"density={gm['density']:.4f}, components={gm['components']}, "
               f"avg_path={gm['avg_path_length']:.2f}, TTR={ttr:.3f}")
 
-    # Metriche per cue
+    # Per-cue metrics
     rows = []
     for model, G in networks.items():
         closeness = nx.closeness_centrality(G)
@@ -68,4 +68,4 @@ if __name__ == "__main__":
     df.to_csv("results/metrics.csv", index=False)
     print("\nPER-CUE METRICS (mean by valence)")
     print(df.groupby(["model", "valence"])[["degree", "strength", "clustering", "closeness"]].mean())
-    print("Salvato results/metrics.csv")
+    print("Saved results/metrics.csv")
