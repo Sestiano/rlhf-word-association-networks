@@ -11,8 +11,6 @@ pip install -r requirements.txt
 python -m spacy download en_core_web_lg
 ```
 
-> **Google Colab:** open [`multiplex_rlhf_colab.ipynb`](multiplex_rlhf_colab.ipynb) and follow the instructions — all dependencies are installed automatically.
-
 ## Structure
 
 ```
