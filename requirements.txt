@@ -1,0 +1,9 @@
+networkx==3.2.1
+pandas==2.3.3
+matplotlib==3.9.4
+scipy==1.13.1
+numpy==1.26.4
+requests==2.32.5
+spacy==3.7.2
+emoatlas==0.1.6
+python-louvain==0.16
