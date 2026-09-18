@@ -1,5 +1,7 @@
 # RLHF Word Association Networks
 
+Exam project for the course *Cognitive Data Science* (Prof. Massimo Stella), MSc in Cognitive Science, CIMeC, University of Trento.
+
 Analysis of RLHF's impact on the associative structure of LLMs using Text-Free Mental Networks (TFMN).
 
 30 cue words (10 positive, 10 negative, 10 neutral) → LLM generates free associations → TFMN construction → Base vs RLHF (chat) comparison.
