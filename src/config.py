@@ -1,6 +1,6 @@
 # config.py - Word Association Task Configuration
-LM_STUDIO_BASE = "http://172.20.10.4:1234/v1/completions"
-LM_STUDIO_CHAT = "http://172.20.10.4:1234/v1/chat/completions"
+LM_STUDIO_BASE = "http://localhost:1234/v1/completions"
+LM_STUDIO_CHAT = "http://localhost:1234/v1/chat/completions"
 MODEL_BASE = "thebloke/llama-2-7b-gguf"
 MODEL_CHAT = "thebloke/llama-2-7b-chat-gguf"
 MAX_TOKENS = 60

@@ -14,7 +14,7 @@ python -m spacy download en_core_web_lg
 ## Structure
 
 ```
-multiplex/
+rlhf-word-association-networks/
 ├── src/
 │   ├── config.py              # Parameters and cue words
 │   ├── 01_generate.py         # Association generation via LM Studio
@@ -26,7 +26,6 @@ multiplex/
 │   └── associations.json      # Generated associations (50 samples × 30 cues × 2 models)
 ├── results/                   # Networks, metrics, plots
 ├── run.py                     # Full pipeline (overnight)
-├── multiplex_rlhf_colab.ipynb # Google Colab notebook
 └── requirements.txt
 ```
 
@@ -47,6 +46,8 @@ nohup python run.py > log.txt 2>&1 &
 ```
 
 ## Output
+
+All files are generated in `results/` by the pipeline; the plots are not committed.
 
 | File | Description |
 |------|-------------|
